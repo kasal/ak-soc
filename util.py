@@ -37,7 +37,6 @@ def are_equal(x, y):
     if (len(x) != len(y)):
         return False
     for i in range(len(x)):
-        print(x[i:] + x[:i])
         # the first check is redundant, but might speed things up...
         if x[i] == y[0] and x[i:] + x[:i] == y:
             return True

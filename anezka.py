@@ -1,11 +1,15 @@
 #!/bin/python
 
+from util import *
+from depo import store_seq
+
 delka_abecedy = 5
-print_debug = not True
+print_debug = False
 
 def debug(txt):
     if (print_debug):
         print(txt)
+
 # mod_list .. utility function
 #
 # Returns a copy of the list, with i-th element set to x.
@@ -26,12 +30,12 @@ def generate(prefix, first, period, indent):
     debug(indent+"start generate for {}".format(prefix))
     done = all([x is not None for x in period])
     if (done):
-        print(prefix)
-        return()
+        store_seq(prefix, first, period)
+        return
     remaining_fraction = compute_remaining_fraction(period)
     if (remaining_fraction < 0.0000001):
         debug(indent+"unused letters remain")
-        return(prefix)
+        return
     # zkontroluj, jestli neni pismeno vynuceno
     #  ... to ted jeste nepotrebujeme
     povinny_znak = None
@@ -49,11 +53,7 @@ def generate(prefix, first, period, indent):
     else:
         # 1) add a new letter, or
         # 2) repeat one of the letters with no period
-        #
-        # 1) - take the next unused letter: len(first)
-        ltr = len(first)
-        if (ltr < delka_abecedy):
-            generate(prefix + [ltr], first + [len(prefix)], period.copy(), indent+'  ')
+        #  ==> switch them, it produces nicer output
         #
         # 2) repeat a letter:
         # Without loss of generality we can assume that 0 has the
@@ -69,6 +69,11 @@ def generate(prefix, first, period, indent):
         for ltr in ltrs_to_repeat:
             new_peri = len(prefix) - first[ltr]
             generate(prefix + [ltr], first.copy(), mod_list(period, ltr, new_peri), indent+'  ')
+        #
+        # 1) - take the next unused letter: len(first)
+        ltr = len(first)
+        if (ltr < delka_abecedy):
+            generate(prefix + [ltr], first + [len(prefix)], period.copy(), indent+'  ')
 
 # returns True, iff ltr can be used now for the second time
 #
