@@ -1,6 +1,7 @@
 #!/bin/python
 
-# EAPD
+# greatest common divisor (Czech: nsd)
+# Euclidean algorith (Czech: EAPD)
 def nsd(x):
     assert isinstance(x, list)
     assert len(x) >= 2
@@ -16,7 +17,9 @@ def nsd(x):
     else:
         return nsd([a] + x[2:])
 
-# nsd * nsn = a * b
+# least common multiple (Czech: nsn)
+# gcd * lcm = a * b (Czech: nsd * nsn = a * b)
+#
 def nsn(x):
     assert isinstance(x, list)
     assert len(x) >= 2
@@ -25,3 +28,17 @@ def nsn(x):
         return a
     else:
         return nsn([a] + x[2:])
+
+# check if two sequences are equivalent
+#
+# equivalent means that they are the same up to a rotation
+#
+def are_equal(x, y):
+    if (len(x) != len(y)):
+        return False
+    for i in range(len(x)):
+        print(x[i:] + x[:i])
+        # the first check is redundant, but might speed things up...
+        if x[i] == y[0] and x[i:] + x[:i] == y:
+            return True
+    return False
