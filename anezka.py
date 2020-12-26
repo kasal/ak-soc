@@ -1,7 +1,7 @@
 #!/bin/python
 
 from util import *
-from depo import store_seq
+from depo import store_seq, print_summary
 
 delka_abecedy = 5
 print_debug = False
@@ -123,6 +123,7 @@ def main():
     period = [None] * delka_abecedy
 
     generate(prefix, first, period, '')
+    print_summary(delka_abecedy)
 
 
 main()

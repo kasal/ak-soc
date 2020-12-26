@@ -2,6 +2,11 @@
 
 from util import *
 
+# config:
+# type 1: list of letters (numbers)
+# type 2: period length, n, p
+print_type = 2
+
 # use global variable to store all the sequences found upto now
 #
 # The list contains pairs (a, ap) where A is the period of the sequence
@@ -48,4 +53,19 @@ def store_seq(prefix, first, period):
             return
     # A new one!
     sequences_list.append( (a, ap) )
-    print('SEQ: ' + str(a) + '*')
+    if print_type == 1:
+        print('SEQ: ' + str(a) + '*')
+    else:
+        print_n_p(first, period)
+
+def print_n_p(first, period):
+    print("seq with period length {}".format(nsn(period)))
+    print("  n: " + format_num(first))
+    print("  p: " + format_num(period))
+
+def format_num(seq):
+    txt = ["{:2d}".format(i) for i in seq]
+    return " ".join(txt)
+
+def print_summary(num_letters):
+    print("\nFor alphabet size {}, we found {} words.".format(num_letters, len(sequences_list)))
