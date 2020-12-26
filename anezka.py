@@ -40,46 +40,49 @@ def generate(prefix, first, period, indent):
     if (remaining_fraction < 0.0000001):
         debug(indent+"unused letters remain")
         return
-    # zkontroluj, jestli neni pismeno vynuceno
     #
-    # TODO: dopln vsechny vynucene znaky v cyklu (ne tolik rekurze)
-    #  vypocet povinneho (uz urceneho) pismene dat do funkce - tu volat v cyklu
-    povinny_znak = None
-    for i in range(len(first)):
-        if (period[i] is not None):
-            if (len(prefix) % period[i] == first[i]):
-                if (povinny_znak is None):
-                    povinny_znak = i
-                else:
-                    # collision - no result possible
-                    return()
-    if (povinny_znak is not None):
-        generate(prefix + [povinny_znak], first, period, indent+'  ')
+    # compute all letters determined by the prefix
+    #
+    while True:
+        next_letter = implied_letter(n, first, period)
+        if next_letter is None:
+            break
+        prefix = prefix + [next_letter]
+
+    # 1) add a new letter, or
+    # 2) repeat one of the letters with no period
+    #  ==> do 2) first and then 1):  the resulting order of all the
+    #      words found is nicer.
+    #
+    # 2) repeat a letter:
+    # Without loss of generality we can assume that 0 has the
+    # shortest period.  Thus letter 0 is the first to repeat.
+    if (period[0] is None):
+        ltrs_to_repeat = [0]
+        min_peri = 0
     else:
-        # 1) add a new letter, or
-        # 2) repeat one of the letters with no period
-        #  ==> do 2) first and then 1):  the resulting order of all the
-        #      words found is nicer.
-        #
-        # 2) repeat a letter:
-        # Without loss of generality we can assume that 0 has the
-        # shortest period.  Thus letter 0 is the first to repeat.
-        if (period[0] is None):
-            ltrs_to_repeat = [0]
-            min_peri = 0
-        else:
-            min_peri = 1 / (remaining_fraction + 0.000001)  # beware: float arithmetics
-            ltrs_to_repeat = [i for i in range(len(first))
-                                if ok_to_repeat(i, prefix, first, period, min_peri)]
-        debug(indent+"--- to repeat: {} (min_peri={:.2f})".format(ltrs_to_repeat, min_peri))
-        for ltr in ltrs_to_repeat:
-            new_peri = len(prefix) - first[ltr]
-            generate(prefix + [ltr], first.copy(), mod_list(period, ltr, new_peri), indent+'  ')
-        #
-        # 1) - take the next unused letter: len(first)
-        ltr = len(first)
-        if (ltr < delka_abecedy):
-            generate(prefix + [ltr], first + [len(prefix)], period.copy(), indent+'  ')
+        min_peri = 1 / (remaining_fraction + 0.000001)  # beware: float arithmetics
+        ltrs_to_repeat = [i for i in range(len(first))
+                            if ok_to_repeat(i, prefix, first, period, min_peri)]
+    debug(indent+"--- to repeat: {} (min_peri={:.2f})".format(ltrs_to_repeat, min_peri))
+    for ltr in ltrs_to_repeat:
+        new_peri = len(prefix) - first[ltr]
+        generate(prefix + [ltr], first.copy(), mod_list(period, ltr, new_peri), indent+'  ')
+    #
+    # 1) - take the next unused letter: len(first)
+    ltr = len(first)
+    if (ltr < delka_abecedy):
+        generate(prefix + [ltr], first + [len(prefix)], period.copy(), indent+'  ')
+
+# find the letter that must be on position n, if any
+#
+# There must be at most one, as we cleverly prevent collisions.
+#
+def implied_letter(n, first, period):
+    for i in range(len(first)):
+        if (period[i] is not None and n % period[i] == first[i]):
+            return i
+    return None
 
 # returns True, iff ltr can be used now for the second time
 #
