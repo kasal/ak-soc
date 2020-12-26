@@ -1,10 +1,14 @@
 #!/bin/python
 
+import sys
 from util import *
 from depo import store_seq, print_summary
 
-delka_abecedy = 5
+delka_abecedy = 12
 print_debug = False
+
+# increase recursion limit for large alphabets
+sys.setrecursionlimit(10**4)
 
 def debug(txt):
     if (print_debug):
