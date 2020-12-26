@@ -37,9 +37,10 @@ def generate(prefix, first, period, indent):
         debug(indent+"unused letters remain")
         return
     # zkontroluj, jestli neni pismeno vynuceno
-    #  ... to ted jeste nepotrebujeme
+    #
+    # TODO: dopln vsechny vynucene znaky v cyklu (ne tolik rekurze)
+    #  vypocet povinneho (uz urceneho) pismene dat do funkce - tu volat v cyklu
     povinny_znak = None
-
     for i in range(len(first)):
         if (period[i] is not None):
             if (len(prefix) % period[i] == first[i]):
@@ -53,7 +54,8 @@ def generate(prefix, first, period, indent):
     else:
         # 1) add a new letter, or
         # 2) repeat one of the letters with no period
-        #  ==> switch them, it produces nicer output
+        #  ==> do 2) first and then 1):  the resulting order of all the
+        #      words found is nicer.
         #
         # 2) repeat a letter:
         # Without loss of generality we can assume that 0 has the
@@ -85,8 +87,27 @@ def ok_to_repeat(ltr, prefix, first, period, min_period):
     # at position first - period
     # - must be at least min_period
     ok = (new_period > first[ltr] and new_period >= min_period)
-    # TODO: we can add more clever tests, to eliminate future collisions
-    return(ok)
+    if (not ok):
+        return(False)
+    # Moreover, check for collision with other letters that already have period set:
+    letters_with_period_set = [i for i in range(len(first))
+                                 if period[i] is not None]
+    for i in letters_with_period_set:
+        if collides((first[i],period[i]), (first[ltr],new_period)):
+            return(False)
+    # passes all checks
+    return(True)
+
+def collides(ltr_one, ltr_two):
+    n1, p1 = ltr_one; n2, p2 = ltr_two
+    k = nsd([p1, p2])
+    # Look at sub-sequences modulo k.
+    # k | p1, so the first letter has all occurences in one of these sub-sequences.
+    # Likewise the second letter.  But are both letters in the same sub-sequence?
+    same_sub_sequence = (n1 % k) == (n2 % k)
+    # If not, they cannot meet.
+    # But if they live in the same, they must meet as their relative periods are coprime.
+    return(same_sub_sequence)
 
 def compute_remaining_fraction(period):
     # fractions occupied by the letters
