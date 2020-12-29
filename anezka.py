@@ -4,7 +4,7 @@ import sys
 from util import *
 from depo import store_seq, print_summary
 
-delka_abecedy = 12
+delka_abecedy = 9
 print_debug = False
 
 # increase recursion limit for large alphabets
@@ -44,7 +44,7 @@ def generate(prefix, first, period, indent):
     # compute all letters determined by the prefix
     #
     while True:
-        next_letter = implied_letter(n, first, period)
+        next_letter = implied_letter(len(prefix), first, period)
         if next_letter is None:
             break
         prefix = prefix + [next_letter]
