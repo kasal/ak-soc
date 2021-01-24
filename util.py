@@ -22,6 +22,8 @@ def nsd(x):
 #
 def nsn(x):
     assert isinstance(x, list)
+    if (len(x) == 1):
+        return x[0]
     assert len(x) >= 2
     a = x[0] * x[1] // nsd(x[:2])
     if len(x) == 2:

@@ -125,9 +125,16 @@ def main():
     # first .. list containing the position of the first occurence of each letter
     # len(first) .. number of letter used up to now
     # period .. list of period lengths of each character; len(period) == delka_abecedy
-    prefix = [0, 1]
-    first = [0, 1]
-    period = [None] * delka_abecedy
+    if delka_abecedy >= 2:
+        prefix = [0, 1]
+        first = [0, 1]
+        period = [None] * delka_abecedy
+    elif delka_abecedy == 1:
+        prefix = [0]
+        first = [0]
+        period = [1]
+    else:
+        sys.exit('Invalid alphabet length.')
 
     generate(prefix, first, period, '')
     print_summary(delka_abecedy)
