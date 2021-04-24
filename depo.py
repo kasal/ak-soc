@@ -42,24 +42,28 @@ def check_and_normalize(prefix, first, period):
 
 # check that the sequence is new
 # if yes, add it to the list of knows sequenes (and print it)
-def store_seq(prefix, first, period):
+def store_seq(prefix, first, period, print_duplicates):
+    global sequences_list
     ret = check_and_normalize(prefix, first, period)
     if ret is None:
         return
     a, ap = ret
     # check if the sequence is already known
-    for a1, ap1 in sequences_list:
+    for dup_id, ap1 in enumerate(sequences_list):
         if are_equal(ap, ap1):
+            if print_duplicates:
+                print_n_p(first, period, "DUP of {}".format(dup_id))
             return
     # A new one!
-    sequences_list.append( (a, ap) )
+    seq_id = len(sequences_list)
+    sequences_list.append( ap )
     if print_type == 1:
         print('SEQ: ' + str(a) + '*')
-    else:
-        print_n_p(first, period)
+    elif:
+        print_n_p(first, period, seq_id)
 
-def print_n_p(first, period):
-    print("seq with period length {}".format(nsn(period)))
+def print_n_p(first, period, seq_id):
+    print("seq {}, with period length {}".format(seq_id, nsn(period)))
     print("  n: " + format_num(first))
     print("  p: " + format_num(period))
 

@@ -6,6 +6,7 @@ from depo import store_seq, print_summary
 
 delka_abecedy = 4
 print_debug = False
+print_duplicates = True
 
 # increase recursion limit for large alphabets
 sys.setrecursionlimit(10**4)
@@ -34,7 +35,7 @@ def generate(prefix, first, period, indent):
     debug(indent+"start generate for {}".format(prefix))
     done = all([x is not None for x in period])
     if (done):
-        store_seq(prefix, first, period)
+        store_seq(prefix, first, period, print_duplicates)
         return
     remaining_fraction = compute_remaining_fraction(period)
     if (remaining_fraction < 0.0000001):
