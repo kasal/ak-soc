@@ -4,7 +4,7 @@ import sys
 from util import *
 from depo import store_seq, print_summary
 
-delka_abecedy = 9
+delka_abecedy = 4
 print_debug = False
 
 # increase recursion limit for large alphabets
@@ -122,6 +122,9 @@ def compute_remaining_fraction(period):
     return(1 - sum(frac))
 
 def main():
+    global delka_abecedy
+    if len(sys.argv) == 2:
+        delka_abecedy = int(sys.argv[1])
     # first .. list containing the position of the first occurence of each letter
     # len(first) .. number of letter used up to now
     # period .. list of period lengths of each character; len(period) == delka_abecedy
