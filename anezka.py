@@ -6,7 +6,7 @@ from depo import store_seq, print_summary
 
 delka_abecedy = 4
 print_debug = False
-print_duplicates = True
+print_duplicates = False
 
 # increase recursion limit for large alphabets
 sys.setrecursionlimit(10**4)

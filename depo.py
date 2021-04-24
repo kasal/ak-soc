@@ -5,7 +5,8 @@ from util import *
 # config:
 # type 1: list of letters (numbers)
 # type 2: period length, n, p
-print_type = 2
+# type 3: print all possible period lengths
+print_type = 3
 
 # use global variable to store all the sequences found upto now
 #
@@ -13,6 +14,7 @@ print_type = 2
 # and AP is sequence where each letter is replaced by the length of its period.
 #
 sequences_list = []
+period_sizes = set()
 
 # check_and_normalize
 #
@@ -57,9 +59,10 @@ def store_seq(prefix, first, period, print_duplicates):
     # A new one!
     seq_id = len(sequences_list)
     sequences_list.append( ap )
+    period_sizes.add( len(ap) )
     if print_type == 1:
         print('SEQ: ' + str(a) + '*')
-    elif:
+    elif print_type == 2:
         print_n_p(first, period, seq_id)
 
 def print_n_p(first, period, seq_id):
@@ -72,4 +75,10 @@ def format_num(seq):
     return " ".join(txt)
 
 def print_summary(num_letters):
-    print("\nFor alphabet size {}, we found {} words.".format(num_letters, len(sequences_list)))
+    if print_type == 3:
+        print("Possible period lengths for alphabet size {}:".format(num_letters))
+        period_sizes_list = list(period_sizes)
+        period_sizes_list.sort()
+        print(" " + str(period_sizes_list))
+    else:
+        print("\nFor alphabet size {}, we found {} words.".format(num_letters, len(sequences_list)))
